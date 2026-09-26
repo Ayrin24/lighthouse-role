@@ -1,0 +1,63 @@
+#SPDX-License-Identifier: MIT-0
+---
+- name: Install nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+    update_cache: true
+
+- name: Create lighthouse directory
+  ansible.builtin.file:
+    path: "{{ lighthouse_install_dir }}"
+    state: directory
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+    mode: "0755"
+
+- name: Download lighthouse archive
+  ansible.builtin.get_url:
+    url: "{{ lighthouse_download_url }}"
+    dest: "{{ lighthouse_archive_path }}"
+    mode: "0644"
+  register: lighthouse_download
+
+- name: Unarchive lighthouse
+  ansible.builtin.unarchive:
+    src: "{{ lighthouse_archive_path }}"
+    dest: "{{ lighthouse_install_dir }}"
+    remote_src: true
+    extra_opts:
+      - "--strip-components=1"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_user }}"
+  when: lighthouse_download.changed  # noqa no-handler
+
+- name: Deploy nginx config for lighthouse
+  ansible.builtin.template:
+    src: lighthouse.conf.j2
+    dest: "{{ nginx_sites_available }}/lighthouse.conf"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload nginx
+
+- name: Enable lighthouse site
+  ansible.builtin.file:
+    src: "{{ nginx_sites_available }}/lighthouse.conf"
+    dest: "{{ nginx_sites_enabled }}/lighthouse.conf"
+    state: link
+  notify: Reload nginx
+
+- name: Remove default nginx site
+  ansible.builtin.file:
+    path: "{{ nginx_default_site }}"
+    state: absent
+  notify: Reload nginx
+
+- name: Enable and start nginx
+  ansible.builtin.service:
+    name: "{{ nginx_service_name }}"
+    enabled: true
+    state: started
+
+# tasks file for lighthouse

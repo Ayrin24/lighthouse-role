@@ -1,0 +1,10 @@
+#SPDX-License-Identifier: MIT-0
+---
+lighthouse_version: "0.1.0"
+lighthouse_download_url: "https://github.com/VKCOM/lighthouse/archive/refs/heads/master.tar.gz"
+lighthouse_install_dir: "/var/www/lighthouse"
+nginx_listen_port: 80
+nginx_server_name: "_"
+nginx_user: "www-data"
+nginx_worker_processes: "auto"
+# defaults file for lighthouse

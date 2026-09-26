@@ -1,0 +1,10 @@
+#SPDX-License-Identifier: MIT-0
+---
+---
+lighthouse_archive_path: "/tmp/lighthouse-{{ lighthouse_version }}.tar.gz"
+nginx_service_name: "nginx"
+nginx_sites_available: "/etc/nginx/sites-available"
+nginx_sites_enabled: "/etc/nginx/sites-enabled"
+nginx_default_site: "/etc/nginx/sites-enabled/default"
+
+# vars file for lighthouse
