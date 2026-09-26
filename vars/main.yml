@@ -1,4 +1,4 @@
-#SPDX-License-Identifier: MIT-0
+# SPDX-License-Identifier: MIT-0
 ---
 ---
 lighthouse_archive_path: "/tmp/lighthouse-{{ lighthouse_version }}.tar.gz"
